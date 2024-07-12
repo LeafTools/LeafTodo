@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  z-index: 1;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background-color: whitesmoke;
+}
+
+.divider-width {
+  border-top: 2px solid gray;
+  height: 1px;
+  width: 100%;
+  margin: 12px 0px;
+}
+
+.divider {
+  border-top: 2px solid gray;
+  height: 1px;
+  width: 90%;
+  margin: 12px 0px;
+}
+
+a, a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+.icon, .svg, svg{
+  fill: currentColor;
+}
+
+.logo {
+  color: green;
+}
+
+.el-divider__text {
+  background-color: whitesmoke !important;
+}
