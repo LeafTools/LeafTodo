@@ -1,0 +1,12 @@
+{
+    "user": {
+        "name": "用户昵称",
+        "sign": "个性签名",
+        "avatar": "用户头像文件名 默认default-avatar.jpg"
+    },
+    "system": {
+        "version": "软件版本号",
+        "launchAtLogin": "是否开机自启动 默认false",
+        "execPath": "软件安装路径 安装后自动添加 E:/code/LeafTodo"
+    }
+}
