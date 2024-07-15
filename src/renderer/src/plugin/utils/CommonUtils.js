@@ -12,3 +12,7 @@ export const sleep = (ms) => {
 export const deepCopyObj = (obj) => {
     return JSON.parse(JSON.stringify(obj))
 }
+
+export const openFileChoseDialog = async () => {
+    return await window.elecApi.ipcRenderer.invoke('openFileChoseDialog')
+}
