@@ -59,3 +59,19 @@ export const writeSystemConfig = (system) => {
     config.system = system
     writeConfig()
 }
+
+export const setLaunchAtLogin = (path, enable) => {
+    if (enable) {
+        if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk') == false) {
+            fs.symlink(path, 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk', 'file', (err) => {
+                if (err) {
+                    throw(err.message)
+                }
+            })
+        }
+    } else {
+        if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')) {
+            fs.rmSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')
+        }
+    }
+}
