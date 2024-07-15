@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { insertNewGroup, queryAllGroups, addNewTodo, queryTodoByGroupId, qureyGroupNameById, deleteTodo, initDb, queryAllTodoType, getMyDay, getTotal, getImportant, getInProject, getRemind, addNewRepeatTodo, setFinishStatus, setImportantStatus, deleteGroup } from './db'
-import { checkAneMoveFile, initConfig, readSystemConfig, readUserConfig, writeSystemConfig, writeUserConfig } from './fs'
+import { checkAneMoveFile, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
 
 const resources_path = process.cwd() + "/resources/"
 
@@ -66,16 +66,6 @@ app.whenReady().then(() => {
   checkAneMoveFile(resources_path)
 
   initConfig(resources_path)
-
-  if (readSystemConfig().launchAtLogin) {
-    app.setLoginItemSettings({
-      openAtLogin: true
-    })
-  } else {
-    app.setLoginItemSettings({
-      openAtLogin: true
-    })
-  }
 
   initDb(resources_path)
 
@@ -158,10 +148,13 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('readSystemConfig', async (event, params) => {
-    return readSystemConfig()
+    const systemConfig = readSystemConfig()
+    setLaunchAtLogin(systemConfig.launchAtLogin)
+    return systemConfig
   })
 
   ipcMain.handle('writeSystemConfig', async (event, params) => {
+    setLaunchAtLogin(process.execPath, params.launchAtLogin)
     return writeSystemConfig(params)
   })
 
