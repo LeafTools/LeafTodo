@@ -1,14 +1,14 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { insertNewGroup, queryAllGroups, addNewTodo, queryTodoByGroupId, qureyGroupNameById, deleteTodo, initDb, queryAllTodoType, getMyDay, getTotal, getImportant, getInProject, getRemind, addNewRepeatTodo, setFinishStatus, setImportantStatus, deleteGroup } from './db'
-import { checkAneMoveFile, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
+import { checkAneMoveFile, copyFileToResources as copyAvatarToResources, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
 
 const resources_path = process.cwd() + "/resources/"
 
 function createWindow() {
 
-  const icon = resources_path + 'icon.png'
+  const icon = resources_path + 'image/icon.png'
 
   const mainWindow = new BrowserWindow({
     width: 360,
@@ -150,6 +150,11 @@ app.whenReady().then(() => {
   ipcMain.handle('readSystemConfig', async (event, params) => {
     const systemConfig = readSystemConfig()
     setLaunchAtLogin(systemConfig.launchAtLogin)
+    if (app.isPackaged) {
+      systemConfig.execPath = execPath.slice(0, execPath.lastIndexOf('\\'))
+    } else {
+      systemConfig.execPath = process.cwd().replaceAll('\\', '/')
+    }
     return systemConfig
   })
 
@@ -164,6 +169,25 @@ app.whenReady().then(() => {
 
   ipcMain.handle('deleteGroup', async (event, params) => {
     return await deleteGroup(params)
+  })
+
+  ipcMain.handle('openFileChoseDialog', async (event, params) => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile']
+    })
+    const imagePath = result.filePaths[0]
+    const filename = imagePath.split('\\')[imagePath.split('\\').length - 1]
+    const imageExtensions  = ['.jpg', '.png', '.bmp', '.jpeg', '.webp', '.svg']
+    for (let extension of imageExtensions) {
+      if (imagePath.endsWith(extension)) {
+        copyAvatarToResources(imagePath, readUserConfig().avatar)
+        const user = readUserConfig()
+        user.avatar = filename
+        writeUserConfig(user)
+        return user
+      }
+    }
+    return readUserConfig()
   })
 
   createWindow()

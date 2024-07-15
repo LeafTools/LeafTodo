@@ -75,3 +75,10 @@ export const setLaunchAtLogin = (path, enable) => {
         }
     }
 }
+
+export const copyFileToResources = (path, old) => {
+    if (fs.existsSync(resources_path + '/image/' + old)) {
+        fs.rmSync(resources_path + '/image/' + old)
+    }
+    fs.copyFileSync(path, resources_path + '/image/' + path.split('\\')[path.split('\\').length - 1])
+}

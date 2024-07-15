@@ -2,12 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { getAllGroups, addNewGroup, addNewTodo, getAllRepeatOptions, getTotal, addNewRepeatTodo, deleteGroup } from '../plugin/utils/DbUtils'
 import { deepCopyObj, isNotBlank } from '../plugin/utils/CommonUtils'
-import { readUserConfig } from '../plugin/utils/FileUtils'
+import { readSystemConfig, readUserConfig } from '../plugin/utils/FileUtils'
 import { Sunny, Star, Tickets, Calendar, Folder, Plus, FolderDelete, Delete } from '@element-plus/icons-vue'
 import { getCurrentDate, getDaysBetweenDate, getDaysBetweenDateByWeek } from '../plugin/utils/DateUtils'
 
 const groups = ref([])
 const user = ref({})
+const system = ref({})
 
 const loadGroupData = async () => {
 	groups.value = await getAllGroups()
@@ -15,7 +16,10 @@ const loadGroupData = async () => {
 
 const loadUserData = async () => {
 	user.value = await readUserConfig()
-    console.log(user.value)
+}
+
+const loadSystemData = async () => {
+	system.value = await readSystemConfig()
 }
 
 const getGroupTotal = async () => {
@@ -28,6 +32,7 @@ const getGroupTotal = async () => {
 
 onMounted(async () => {
 	await loadUserData()
+	await loadSystemData()
 	await loadGroupData()
 	await getGroupTotal()
 })
@@ -99,12 +104,16 @@ const rmGroup = async (groupId) => {
 	await deleteGroup(groupId)
 	await loadGroupData()
 }
+
+const loadUserAvatar = () => {
+    return '@fs/' + system.value.execPath + '/resources/image/' + user.value.avatar
+}
 </script>
 
 <template>
 	<div id="Home">
 		<router-link to="/config" id="user-info">
-			<div id="user-avatar"></div>
+			<img id="user-avatar" :src="loadUserAvatar()">
 			<div style="display: flex; flex-direction: column; justify-content: center; flex: 1; margin-left: 12px;">
 				<div id="user-name" style="font-weight: 500;">{{ user.name }}</div>
 				<div id="user-sign" style="font-weight: 300;">{{ user.sign }}</div>
@@ -313,7 +322,6 @@ const rmGroup = async (groupId) => {
 	width: 8vh;
 	height: 8vh;
 	border: 3px solid #409EFF;
-	background-image: url('@assets/images/default-avatar.jpg');
 	background-position: center;
 	background-size: cover;
 }

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { readSystemConfig, readUserConfig, writeSystemConfig, writeUserConfig } from '../plugin/utils/FileUtils.js'
 import { ArrowLeft } from '@element-plus/icons-vue'
+import { openFileChoseDialog } from '../plugin/utils/CommonUtils.js';
 
 const user = ref({})
 const system = ref({})
@@ -9,6 +10,7 @@ const system = ref({})
 onMounted(async () => {
     user.value = await readUserConfig()
     system.value = await readSystemConfig()
+    loadUserAvatar()
 })
 
 const userConfigChange = async () => {
@@ -17,6 +19,17 @@ const userConfigChange = async () => {
 
 const systemConfigChange= async () => {
     await writeSystemConfig(system.value)
+}
+
+const userAvatar = ref()
+
+const loadUserAvatar = () => {
+    userAvatar.value = '@fs/' + system.value.execPath + '/resources/image/' + user.value.avatar
+}
+
+const changeAvatar = async () => {
+    user.value = await openFileChoseDialog()
+    loadUserAvatar()
 }
 </script>
 
@@ -31,7 +44,7 @@ const systemConfigChange= async () => {
 		</div>
         <div id="main">
             <div style="display: flex; align-items: center;">
-                <div id="user-avatar"></div>
+                <img id="user-avatar" :src="userAvatar" @click="changeAvatar">
                 <div style="display: flex; flex-direction: column; justify-content: center; flex: 1; margin-left: 12px;">
                     <div style="display: flex; align-items: center; margin: 3px 0;">
                         <div style="width: 20vw;">用户名</div>
@@ -47,6 +60,9 @@ const systemConfigChange= async () => {
             <div style="display: flex; flex-direction: column;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                     <div>版本号</div><div>{{ system.version }}</div>
+                </div>
+                <div style="display: flex; margin-bottom: 12px; flex-direction: column;">
+                    <div>安装路径</div><div style="font-size: small; white-space: normal; word-wrap: break-word;">{{ system.execPath }}</div>
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div>开机自启动</div><div><el-switch v-model="system.launchAtLogin" @change="systemConfigChange"/></div>
@@ -85,7 +101,6 @@ const systemConfigChange= async () => {
 	width: 8vh;
 	height: 8vh;
 	border: 3px solid #409EFF;
-	background-image: url('@assets/images/default-avatar.jpg');
 	background-position: center;
 	background-size: cover;
 }
