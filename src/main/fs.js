@@ -3,21 +3,22 @@ import * as fs from 'fs'
 export const checkAneMoveFile = (filepath) => {
     console.log('Check file...')
     if (fs.existsSync(filepath + 'data.db') == false) {
-        console.log('Moving file...')
-        const files = ['data.db', 'config.json', 'config.example.json', 'icon.png']
-        for (const file of files) {
-            if (fs.existsSync(filepath + `app.asar.unpacked/resources/${file}`, filepath + `${file}`)) {
-                fs.renameSync(filepath + `app.asar.unpacked/resources/${file}`, filepath + `${file}`)
-            }
-        }
-        console.log('The avatar path is: ' + filepath + `app.asar.unpacked/resources/image/default-avatar.jpg`)
+        fs.renameSync(filepath + 'app.asar.unpacked/resources/data.db', filepath + 'data.db')
+    }
+    if (fs.existsSync(filepath + 'config.json') == false) {
+        fs.renameSync(filepath + 'app.asar.unpacked/resources/config.json', filepath + 'config.json')
+    }
+    if (fs.existsSync(filepath + 'config.example.json') == false) {
+        fs.renameSync(filepath + 'app.asar.unpacked/resources/config.example.json', filepath + 'config.example.json')
+    }
+    if (fs.existsSync(filepath + 'image') == false) {
         fs.mkdirSync(filepath + `image`)
+        fs.renameSync(filepath + `app.asar.unpacked/resources/image/icon.png`, filepath + `icon.png`)
         fs.renameSync(filepath + `app.asar.unpacked/resources/image/default-avatar.jpg`, filepath + `image/default-avatar.jpg`)
         fs.rmdirSync(filepath + 'app.asar.unpacked/resources/image')
-        fs.rmdirSync(filepath + 'app.asar.unpacked/resources')
-        fs.rmdirSync(filepath + 'app.asar.unpacked')
-        console.log('Move file success!')
     }
+    fs.rmdirSync(filepath + 'app.asar.unpacked/resources')
+    fs.rmdirSync(filepath + 'app.asar.unpacked')
     console.log('Check file success!')
 }
 
