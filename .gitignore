@@ -6,3 +6,4 @@ out
 .vscode
 .idea
 /resources/config.json
+/resources/data.db
