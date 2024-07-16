@@ -8,6 +8,7 @@ export const checkAneMoveFile = (filepath) => {
         for (const file of files) {
             fs.renameSync(filepath + `app.asar.unpacked/resources/${file}`, filepath + `${file}`)
         }
+        fs.renameSync(filepath + `app.asar.unpacked/resources/image/default-avatar.jpg`, filepath + `image/default-avatar.jpg`)
         fs.rmdirSync(filepath + 'app.asar.unpacked/resources')
         fs.rmdirSync(filepath + 'app.asar.unpacked')
         console.log('Move file success!')
@@ -76,7 +77,7 @@ export const setLaunchAtLogin = (path, enable) => {
     }
 }
 
-export const copyFileToResources = (path, old) => {
+export const copyAvatarToResources = (path, old) => {
     if (fs.existsSync(resources_path + '/image/' + old)) {
         fs.rmSync(resources_path + '/image/' + old)
     }

@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { insertNewGroup, queryAllGroups, addNewTodo, queryTodoByGroupId, qureyGroupNameById, deleteTodo, initDb, queryAllTodoType, getMyDay, getTotal, getImportant, getInProject, getRemind, addNewRepeatTodo, setFinishStatus, setImportantStatus, deleteGroup } from './db'
-import { checkAneMoveFile, copyFileToResources as copyAvatarToResources, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
+import { checkAneMoveFile, copyAvatarToResources, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
 
 const resources_path = process.cwd() + "/resources/"
 
