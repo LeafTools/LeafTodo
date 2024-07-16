@@ -151,7 +151,7 @@ app.whenReady().then(() => {
     const systemConfig = readSystemConfig()
     setLaunchAtLogin(systemConfig.launchAtLogin)
     if (app.isPackaged) {
-      systemConfig.execPath = execPath.slice(0, execPath.lastIndexOf('\\'))
+      systemConfig.execPath = process.execPath.slice(0, process.execPath.lastIndexOf('\\'))
     } else {
       systemConfig.execPath = process.cwd().replaceAll('\\', '/')
     }
