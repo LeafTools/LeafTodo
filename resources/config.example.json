@@ -7,6 +7,7 @@
     "system": {
         "version": "软件版本号",
         "launchAtLogin": "是否开机自启动 默认false",
-        "execPath": "软件安装路径 安装后自动添加 E:/code/LeafTodo"
+        "execPath": "软件安装路径 安装后自动添加 E:/code/LeafTodo",
+        "dev": "开发模式"
     }
 }

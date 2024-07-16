@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import { app } from 'electron'
 
 export const checkAneMoveFile = (filepath) => {
     console.log('Check file...')
@@ -72,17 +73,19 @@ export const writeSystemConfig = (system) => {
 }
 
 export const setLaunchAtLogin = (path, enable) => {
-    if (enable) {
-        if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk') == false) {
-            fs.symlink(path, 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk', 'file', (err) => {
-                if (err) {
-                    throw(err.message)
-                }
-            })
-        }
-    } else {
-        if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')) {
-            fs.rmSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')
+    if (app.isPackaged) {
+        if (enable) {
+            if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk') == false) {
+                fs.symlink(path, 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk', 'file', (err) => {
+                    if (err) {
+                        throw(err.message)
+                    }
+                })
+            }
+        } else {
+            if (fs.existsSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')) {
+                fs.rmSync('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/leaftodo.lnk')
+            }
         }
     }
 }

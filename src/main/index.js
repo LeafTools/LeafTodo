@@ -40,6 +40,8 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
 
 app.whenReady().then(() => {
@@ -194,7 +196,11 @@ app.whenReady().then(() => {
     return readImageByBase64(resources_path + 'image/' + params)
   })
 
-  createWindow()
+  ipcMain.handle('openDevTools', (event, params) => {
+    mainWindow.webContents.openDevTools()
+  })
+
+  const mainWindow = createWindow()
 
   app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { loadImage, readSystemConfig, readUserConfig, writeSystemConfig, writeUserConfig } from '../plugin/utils/FileUtils.js'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { openFileChoseDialog } from '../plugin/utils/CommonUtils.js';
+import { openDevTools, openFileChoseDialog } from '../plugin/utils/CommonUtils.js';
 
 const user = ref({})
 const system = ref({})
@@ -30,6 +30,10 @@ const loadUserAvatar = async () => {
 const changeAvatar = async () => {
     user.value = await openFileChoseDialog()
     loadUserAvatar()
+}
+
+const openDev = () => {
+    openDevTools()
 }
 </script>
 
@@ -66,6 +70,15 @@ const changeAvatar = async () => {
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div>开机自启动</div><div><el-switch v-model="system.launchAtLogin" @change="systemConfigChange"/></div>
+                </div>
+            </div>
+            <el-divider></el-divider>
+            <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; margin-bottom: 12px; align-items: center; justify-content: space-between;">
+                    <div>开发者模式</div><div><el-switch v-model="system.dev" @change="systemConfigChange"/></div>
+                </div>
+                <div style="display: flex; flex-direction: column;" v-if="system.dev">
+                    <el-button type="warning" plain @click="openDev">打开控制台</el-button>
                 </div>
             </div>
         </div>

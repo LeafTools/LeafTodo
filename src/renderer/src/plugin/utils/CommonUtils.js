@@ -16,3 +16,7 @@ export const deepCopyObj = (obj) => {
 export const openFileChoseDialog = async () => {
     return await window.elecApi.ipcRenderer.invoke('openFileChoseDialog')
 }
+
+export const openDevTools = () => {
+    window.elecApi.ipcRenderer.invoke('openDevTools')
+}
