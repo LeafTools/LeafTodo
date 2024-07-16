@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { getAllGroups, addNewGroup, addNewTodo, getAllRepeatOptions, getTotal, addNewRepeatTodo, deleteGroup } from '../plugin/utils/DbUtils'
 import { deepCopyObj, isNotBlank } from '../plugin/utils/CommonUtils'
-import { readSystemConfig, readUserConfig } from '../plugin/utils/FileUtils'
+import { loadImage, readSystemConfig, readUserConfig } from '../plugin/utils/FileUtils'
 import { Sunny, Star, Tickets, Calendar, Folder, Plus, FolderDelete, Delete } from '@element-plus/icons-vue'
 import { getCurrentDate, getDaysBetweenDate, getDaysBetweenDateByWeek } from '../plugin/utils/DateUtils'
 
@@ -35,6 +35,7 @@ onMounted(async () => {
 	await loadSystemData()
 	await loadGroupData()
 	await getGroupTotal()
+	await loadUserAvatar()
 })
 
 const dialogVisable = ref(false)
@@ -105,15 +106,17 @@ const rmGroup = async (groupId) => {
 	await loadGroupData()
 }
 
-const loadUserAvatar = () => {
-    return '@fs/' + system.value.execPath + '/resources/image/' + user.value.avatar
+const avatarBase64 = ref()
+
+const loadUserAvatar = async () => {
+    avatarBase64.value = await loadImage(user.value.avatar)
 }
 </script>
 
 <template>
 	<div id="Home">
 		<router-link to="/config" id="user-info">
-			<img id="user-avatar" :src="loadUserAvatar()">
+			<img id="user-avatar" :src="avatarBase64">
 			<div style="display: flex; flex-direction: column; justify-content: center; flex: 1; margin-left: 12px;">
 				<div id="user-name" style="font-weight: 500;">{{ user.name }}</div>
 				<div id="user-sign" style="font-weight: 300;">{{ user.sign }}</div>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { readSystemConfig, readUserConfig, writeSystemConfig, writeUserConfig } from '../plugin/utils/FileUtils.js'
+import { loadImage, readSystemConfig, readUserConfig, writeSystemConfig, writeUserConfig } from '../plugin/utils/FileUtils.js'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { openFileChoseDialog } from '../plugin/utils/CommonUtils.js';
 
@@ -21,10 +21,10 @@ const systemConfigChange= async () => {
     await writeSystemConfig(system.value)
 }
 
-const userAvatar = ref()
+const avatarBase64 = ref()
 
-const loadUserAvatar = () => {
-    userAvatar.value = '@fs/' + system.value.execPath + '/resources/image/' + user.value.avatar
+const loadUserAvatar = async () => {
+    avatarBase64.value = await loadImage(user.value.avatar)
 }
 
 const changeAvatar = async () => {
@@ -44,7 +44,7 @@ const changeAvatar = async () => {
 		</div>
         <div id="main">
             <div style="display: flex; align-items: center;">
-                <img id="user-avatar" :src="userAvatar" @click="changeAvatar">
+                <img id="user-avatar" :src="avatarBase64" @click="changeAvatar">
                 <div style="display: flex; flex-direction: column; justify-content: center; flex: 1; margin-left: 12px;">
                     <div style="display: flex; align-items: center; margin: 3px 0;">
                         <div style="width: 20vw;">用户名</div>

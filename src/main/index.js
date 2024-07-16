@@ -2,9 +2,9 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { insertNewGroup, queryAllGroups, addNewTodo, queryTodoByGroupId, qureyGroupNameById, deleteTodo, initDb, queryAllTodoType, getMyDay, getTotal, getImportant, getInProject, getRemind, addNewRepeatTodo, setFinishStatus, setImportantStatus, deleteGroup } from './db'
-import { checkAneMoveFile, copyAvatarToResources, initConfig, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
+import { checkAneMoveFile, copyAvatarToResources, initConfig, readImageByBase64, readSystemConfig, readUserConfig, setLaunchAtLogin, writeSystemConfig, writeUserConfig } from './fs'
 
-const resources_path = process.cwd() + "/resources/"
+const resources_path = (app.isPackaged ? process.execPath.slice(0, process.execPath.lastIndexOf('\\')) : process.cwd()) + "/resources/"
 
 function createWindow() {
 
@@ -151,7 +151,7 @@ app.whenReady().then(() => {
     const systemConfig = readSystemConfig()
     setLaunchAtLogin(systemConfig.launchAtLogin)
     if (app.isPackaged) {
-      systemConfig.execPath = process.execPath.slice(0, process.execPath.lastIndexOf('\\'))
+      systemConfig.execPath = process.execPath.slice(0, process.execPath.lastIndexOf('\\')).replaceAll('\\', '/')
     } else {
       systemConfig.execPath = process.cwd().replaceAll('\\', '/')
     }
@@ -188,6 +188,10 @@ app.whenReady().then(() => {
       }
     }
     return readUserConfig()
+  })
+
+  ipcMain.handle('loadImage', async (event, params) => {
+    return readImageByBase64(resources_path + 'image/' + params)
   })
 
   createWindow()

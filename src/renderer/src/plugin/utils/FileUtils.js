@@ -15,3 +15,7 @@ export const readSystemConfig = async () => {
 export const writeSystemConfig = async (systemConfig) => {
     return await window.elecApi.ipcRenderer.invoke('writeSystemConfig', deepCopyObj(systemConfig))
 }
+
+export const loadImage = async (filename) => {
+    return await window.elecApi.ipcRenderer.invoke('loadImage', filename)
+}
