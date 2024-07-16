@@ -17,8 +17,12 @@ export const checkAneMoveFile = (filepath) => {
         fs.renameSync(filepath + `app.asar.unpacked/resources/image/default-avatar.jpg`, filepath + `image/default-avatar.jpg`)
         fs.rmdirSync(filepath + 'app.asar.unpacked/resources/image')
     }
-    fs.rmdirSync(filepath + 'app.asar.unpacked/resources')
-    fs.rmdirSync(filepath + 'app.asar.unpacked')
+    if (fs.existsSync(filepath + 'app.asar.unpacked/resources')) {
+        fs.rmdirSync(filepath + 'app.asar.unpacked/resources')
+    }
+    if (fs.existsSync(filepath + 'app.asar.unpacked')) {
+        fs.rmdirSync(filepath + 'app.asar.unpacked')
+    }
     console.log('Check file success!')
 }
 
